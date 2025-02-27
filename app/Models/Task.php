@@ -17,6 +17,25 @@ class Task extends Model
     }
 
     public function getTaskList() {
-        return $this->where('completed', false)->orderBy('created_at', 'desc')->get();
+        return $this->orderBy('created_at', 'desc')->get();
+    }
+
+    public function markAsDone($id) {
+        $task = $this->find($id);
+        if($task) {
+            $task->completed = true;
+            $task->save();
+            return true;
+        }
+        return false;
+    }
+
+    public function removeTask($id) {
+        $task = $this->find($id);
+        if($task) {
+            $task->delete();
+            return true;
+        }
+        return false;
     }
 }

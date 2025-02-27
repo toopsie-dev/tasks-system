@@ -10,5 +10,7 @@ Route::get('/user', function (Request $request) {
 
 Route::post('/save-task', [TaskApiController::class, 'saveTask']);
 Route::get('/get-task-list', [TaskApiController::class, 'getAllTasks']);
+Route::put('/mark-as-done/{id}', [TaskApiController::class, 'markAsDone']);
+Route::delete('/remove-task/{id}', [TaskApiController::class, 'removeTask']);
 
 

@@ -36,4 +36,24 @@ class TaskApiController extends Controller
     public function getAllTasks() {
         return response()->json(['data' => $this->taskModel->getTaskList()], 200);
     }
+
+    public function markAsDone($taskId) {
+        $isUpdated = $this->taskModel->markAsDone($taskId);
+        
+        if($isUpdated) {
+            return response()->json(['message' => 'Task is done!'], 200);
+        }
+
+        return response()->json(['error' => 'Failed to update task!'], 422);
+    }
+
+    public function removeTask($taskId) {
+        $isDeleted = $this->taskModel->removeTask($taskId);
+
+        if($isDeleted) {
+            return response()->json(['message' => 'Task is deleted!'], 200);
+        }
+
+        return response()->json(['error' => 'Failed to delete task!'], 422);
+    }
 }
