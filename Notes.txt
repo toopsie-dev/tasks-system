@@ -25,4 +25,12 @@ Setup 👍
   🪓 npm install react@latest react-dom@latest
   🪓 npm install -D tailwindcss@3 postcss autoprefixer
   🪓 npx tailwindcss init -p
+  🪓 npm install react-router-dom@latest
+  🪓 npm install axios@latest
+
+
+  🪓 php artisan make:model Task -m
+  🪓 php artisan migrate
+  🪓 php artisan make:controller Api/TaskApiController
+  🪓 php artisan install:api
 
