@@ -38,4 +38,8 @@ class Task extends Model
         }
         return false;
     }
+
+    public function getTaskCompleted() {
+        return $this->where('completed', '1')->get();
+    }
 }

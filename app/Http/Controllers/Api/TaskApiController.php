@@ -56,4 +56,8 @@ class TaskApiController extends Controller
 
         return response()->json(['error' => 'Failed to delete task!'], 422);
     }
+
+    public function getTaskCompleted() {
+        return response()->json(['data' => $this->taskModel->getTaskCompleted(), 200]);
+    }
 }

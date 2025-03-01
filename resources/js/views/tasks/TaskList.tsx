@@ -6,7 +6,8 @@ import { TaskData } from "../../types/types";
 import { truncateText } from "../../utils/string";
 
 const TaskList = () => {
-    const { taskList, updateContext } = useTaskContext();
+    const { taskList, updateContext, fetchTaskList, fetchTaskCompleted } =
+        useTaskContext();
 
     const errMessage = (error: unknown) => {
         console.error("API Error:", error);
@@ -48,7 +49,7 @@ const TaskList = () => {
     };
 
     const renderList = (task: TaskData) => {
-        const { title, id, description, completed } = task;
+        const { id, title, description, completed } = task;
         return (
             <div
                 className="flex flex-col bg-slate-800 rounded-lg mx-5"
@@ -125,9 +126,68 @@ const TaskList = () => {
 
     return (
         <div className="card bg-slate-600/50 shadow-xl">
-            <div className="card-body">
-                <h2 className="card-title text-gray-100 text-3xl">Your Task</h2>
-                <p className="font-display">Make your day more productive.</p>
+            <div className="card-body px-10">
+                <div className="flex justify-between items-center">
+                    <div className="flex flex-col">
+                        <h2 className="card-title text-gray-100 text-3xl">
+                            Your Task
+                        </h2>
+                        <p className="font-display">
+                            Make your day more productive.
+                        </p>
+                    </div>
+                    <div className="flex">
+                        <ul className="menu menu-horizontal rounded-lg flex items-center bg-slate-800">
+                            <li>
+                                <div
+                                    className="tooltip tooltip-bottom"
+                                    data-tip="Task List"
+                                >
+                                    <svg
+                                        width={25}
+                                        height={25}
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        onClick={fetchTaskList}
+                                    >
+                                        <path d="M8 6h13" />
+                                        <path d="M8 12h13" />
+                                        <path d="M8 18h13" />
+                                        <path d="M3 6h.01" />
+                                        <path d="M3 12h.01" />
+                                        <path d="M3 18h.01" />
+                                    </svg>
+                                </div>
+                            </li>
+                            <li>
+                                <div
+                                    className="tooltip tooltip-bottom"
+                                    data-tip="Completed"
+                                >
+                                    <svg
+                                        width={25}
+                                        height={25}
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        onClick={fetchTaskCompleted}
+                                    >
+                                        <path d="M20 6 9 17l-5-5" />
+                                    </svg>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
             <div className="flex flex-col gap-2 max-h-[28rem] overflow-y-auto mb-10">

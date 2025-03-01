@@ -11,6 +11,8 @@ import { TaskData } from "../../types/types";
 interface TaskContentType {
     taskList: TaskData[];
     updateContext: () => void;
+    fetchTaskList: () => void;
+    fetchTaskCompleted: () => void;
 }
 
 const TaskContext = createContext<TaskContentType | undefined>(undefined);
@@ -31,6 +33,17 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({
         }
     };
 
+    const fetchTaskCompleted = async () => {
+        try {
+            const response = await apiService.get<{ data: TaskData[] }>(
+                "get-task-completed-list"
+            );
+            setTaskList(response.data.data);
+        } catch (error) {
+            console.error("Error fetching completed task list:", error);
+        }
+    };
+
     const updateContext = () => {
         fetchTaskList();
     };
@@ -40,7 +53,14 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({
     }, []);
 
     return (
-        <TaskContext.Provider value={{ taskList, updateContext }}>
+        <TaskContext.Provider
+            value={{
+                taskList,
+                updateContext,
+                fetchTaskList,
+                fetchTaskCompleted,
+            }}
+        >
             {children}
         </TaskContext.Provider>
     );
