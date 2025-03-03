@@ -1,15 +1,12 @@
-import React, {
-    createContext,
-    ReactNode,
-    useContext,
-    useEffect,
-    useState,
-} from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { createContext, ReactNode, useContext } from "react";
 import apiService from "../../services/api";
 import { TaskData } from "../../types/types";
 
 interface TaskContentType {
     taskList: TaskData[];
+    isLoading: boolean;
+    isError: boolean;
     updateContext: () => void;
     fetchTaskList: () => void;
     fetchTaskCompleted: () => void;
@@ -20,42 +17,43 @@ const TaskContext = createContext<TaskContentType | undefined>(undefined);
 export const TaskProvider: React.FC<{ children: ReactNode }> = ({
     children,
 }) => {
-    const [taskList, setTaskList] = useState<TaskData[]>([]);
+    const queryClient = useQueryClient();
 
-    const fetchTaskList = async () => {
-        try {
+    const {
+        data: taskList = [],
+        isLoading,
+        isError,
+    } = useQuery({
+        queryKey: ["tasks"],
+        queryFn: async () => {
             const response = await apiService.get<{ data: TaskData[] }>(
                 "get-task-list"
             );
-            setTaskList(response.data.data);
-        } catch (error) {
-            console.error("Error fetching task list:", error);
-        }
+            return response.data.data;
+        },
+    });
+
+    const fetchTaskList = () => {
+        queryClient.invalidateQueries({ queryKey: ["tasks"] });
     };
 
     const fetchTaskCompleted = async () => {
-        try {
-            const response = await apiService.get<{ data: TaskData[] }>(
-                "get-task-completed-list"
-            );
-            setTaskList(response.data.data);
-        } catch (error) {
-            console.error("Error fetching completed task list:", error);
-        }
+        const response = await apiService.get<{ data: TaskData[] }>(
+            "get-task-completed-list"
+        );
+        queryClient.setQueryData(["tasks"], response.data.data);
     };
 
     const updateContext = () => {
         fetchTaskList();
     };
 
-    useEffect(() => {
-        fetchTaskList();
-    }, []);
-
     return (
         <TaskContext.Provider
             value={{
                 taskList,
+                isLoading,
+                isError,
                 updateContext,
                 fetchTaskList,
                 fetchTaskCompleted,
